@@ -1,0 +1,140 @@
+* {
+	margin: 0;
+}
+html, body {
+	height: 100%;
+	font-family: arial;
+}
+
+#header {
+	height: 125px;
+	background-color: #000;
+	padding-left: 180px;
+	padding-top: 20px;
+	border-bottom: 4px solid grey;
+}
+
+#header p {
+	float: right;
+	margin-right: 280px;
+    margin-top: -45px;
+}
+
+h1, h2 {
+	text-align: left;
+	font-family: arial;
+}
+
+h1 {
+	font-size: 5em;
+	color: green;
+}
+h1 a {
+	text-decoration:none;
+	color: green;
+}
+
+h2 {
+	font-style: italic;
+	color: #fff;
+}
+
+.strong {
+	font-style: bold;
+}
+.welcome {
+	color: #fff;
+	float:right;
+	padding-right:25%;
+}
+
+#container {
+	min-height: 100%;
+	height: auto !important;
+	margin: 0 auto 80px;
+	width: 900px;
+	padding-top: 50px;
+}
+
+#midsection{
+	text-align:center;
+}
+
+#explain {
+	display:block;
+	width: 600px;
+	text-align:center;
+	padding-bottom:25px;
+}
+
+p, .explain-text explain, .explain-text tracks {
+	text-align: left;
+	font-size: 1.5em;
+	font-family: "ff-netto-web-1","ff-netto-web-2";
+	padding-bottom: 20px;
+}
+
+li {
+	text-align: left;
+	font-size: 1.5em;
+	font-family: "ff-netto-web-1","ff-netto-web-2";
+	list-style:none;
+}
+
+p a, .explain-text a, li a {
+	color: green;
+	text-decoration:none;
+	font-style:bold;
+}
+
+#footer {
+	width:100%;
+	height: 80px;
+	background-color: #000;
+	clear: both;
+}
+
+#facebook {
+	float: left;
+	padding-left: 200px;
+	padding-top: 30px;
+}
+
+#credits {
+	padding: 14px;
+	float: right;
+}
+
+.artist-list {
+	display:block;
+	width: 800px;
+	
+}
+.artist-list li {
+	display:inline;
+}
+
+.artist-list img {
+	margin-right: 10px;
+	border: 1px solid #4E9B06;
+}
+.button, .spinner, .errors {
+	width:100%;
+	text-align:center;
+}
+
+.errors {
+	background-color: #4E9B06;
+	color: #fff;
+}
+.letsgo{
+    background: -moz-linear-gradient(center top , #4E9B06, #5DA006) repeat scroll 0 0 transparent;
+    border: 1px solid #466A98;
+    border-radius: 4px 4px 4px 4px;
+    color: #FFFFFF;
+    font-size: 60px;
+    font-weight: bold;
+    padding: 10px 20px 12px;
+    text-decoration: none;
+    text-shadow: 0 -1px 0 #003366;
+}
