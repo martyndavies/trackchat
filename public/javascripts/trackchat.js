@@ -19,7 +19,7 @@ $(document).ready(function(){
 				tweetStore.push(urlReadyText);
 			});
 			var stripTweets = encodeURIComponent(tweetStore)
-			var url = 'http://developer.echonest.com/api/v4/artist/extract?api_key=TGUNRHOPCCFWRVO0A&format=jsonp&callback=?&text=' + stripTweets + '&results=100&sort=hotttnesss-desc&bucket=images';
+			var url = 'http://developer.echonest.com/api/v4/artist/extract?api_key=TGUNRHOPCCFWRVO0A&format=jsonp&callback=?&text=' + stripTweets + '&results=35&sort=hotttnesss-desc&bucket=images';
 			$.ajax({
 				cache: true,
 				dataType: "json",
