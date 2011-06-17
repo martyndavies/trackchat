@@ -70,6 +70,7 @@ $(document).ready(function(){
 						// Fade out the spinner, then fade in the artists
 						$('.spinner').fadeOut('slow', function() {
 							$('.artist-list').fadeIn('slow', function() {
+								$('.reload').delay(600).html('Reload');
 								$('.nav').fadeIn('slow');
 							});
 						});		
@@ -106,7 +107,7 @@ $(document).ready(function(){
 				$('#returned-info').fadeIn('slow');
 	        },
 			error: function() {
-				$('.errors').append('<li>Sorry, there was an error getting information for that artist!</li>').fadeIn("slow");
+				$('.errors').after('<li>Sorry, there was an error getting information for that artist!</li>').fadeIn("slow");
 			} 
 	    });
 		$(this).children().css('border-color', 'red');
@@ -115,10 +116,6 @@ $(document).ready(function(){
 	
 	// first big button
 	$(".letsgo").click(letsGo);
-	
-	$('.play').click(function() {
-		alert('play button clicked');
-	});
 		
 	// Reload function
 	$('.reload').click(function() {
@@ -127,8 +124,32 @@ $(document).ready(function(){
 		$('.artist-list').fadeOut("slow", function() {
 			$('.artist-list li').delay(600).remove();
 			letsGo();
-			$('.reload').delay(600).html('Reload');
 		});	
+	});
+	
+	// Soundmanager
+	soundManager.url = '/swf/'; // directory where SM2 .SWFs live
+	soundManager.useHTML5Audio = true;
+	soundManager.useFlashBlock = false;
+	soundManager.onready(function() {
+
+	  // SM2 has loaded - now you can create and play sounds!
+	  var mySound = soundManager.createSound({
+	    id: 'aSound',
+	    url: '/path/to/an.mp3'
+	    // onload: [ event handler function object ],
+	    // other options here..
+	  });
+	  $('.play').click(function() {
+		alert('play button clicked');
+		//mySound.play();
+		});
+	});
+
+	soundManager.ontimeout(function() {
+
+	  // (Optional) Hrmm, SM2 could not start. Show an error, etc.?
+
 	});
 	
 });
