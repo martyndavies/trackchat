@@ -6,6 +6,15 @@ html, body {
 	font-family: arial;
 }
 
+a.link {
+	color: #4E9B06;
+	text-decoration:none;
+}
+
+a.link:hover {
+	text-decoration:underline;
+}
+
 #header {
 	height: 145px;
 	background-color: #000;
@@ -38,6 +47,8 @@ h2 {
 	font-family: "atrament-web-1","atrament-web-2";
 	font-style: italic;
 	color: #fff;
+	margin-left: 10px;
+    margin-top: -12px;
 }
 
 .strong {
@@ -47,6 +58,7 @@ h2 {
 	color: #fff;
 	float:right;
 	padding-right:25%;
+	font-size: 12px;
 }
 
 #container {
@@ -55,26 +67,11 @@ h2 {
 	margin: 0 auto 80px;
 	width: 980px;
 	padding-top: 50px;
-	text-align:center;
+	text-align:left;
 }
 
-#midsection{
-	text-align:center;
-}
 
-#explain {
-	display:block;
-	width: 600px;
-	text-align:center;
-	padding-bottom:25px;
-}
 
-p, .explain-text explain, .explain-text tracks {
-	text-align: left;
-	font-size: 1.5em;
-	font-family: "ff-netto-web-1","ff-netto-web-2";
-	padding-bottom: 20px;
-}
 
 li {
 	text-align: left;
@@ -89,31 +86,15 @@ p a, .explain-text a, li a {
 	font-style:bold;
 }
 
-#footer {
-	width:100%;
-	height: 80px;
-	background-color: #000;
-	clear: both;
-}
-
-#facebook {
-	float: left;
-	padding-left: 200px;
-	padding-top: 30px;
-}
-
-#credits {
-	padding: 14px;
-	float: right;
-}
-
 .artist-list {
 	display:block;
-	width: 980px;
+	text-align:center;
 	
 }
 .artist-list li {
 	display:inline;
+	width:100px;
+	height:100px;
 }
 
 .artist-list img {
@@ -145,4 +126,32 @@ p a, .explain-text a, li a {
     padding: 10px 20px 12px;
     text-decoration: none;
     text-shadow: 0 -1px 0 #003366;
+}
+
+.bigbutton a:hover {
+	text-decoration:none;
+}
+.reload, .play {
+	font-family: "ff-prater-block-web-1","ff-prater-block-web-2";
+    background: -moz-linear-gradient(center top , #4E9B06, #5DA006) repeat scroll 0 0 transparent;
+    border: 1px solid #466A98;
+    border-radius: 4px 4px 4px 4px;
+    color: #FFFFFF;
+    font-size: 25px;
+    font-weight: bold;
+    padding: 0px 10px 4px;
+    text-decoration: none;
+    text-shadow: 0 -1px 0 #003366;
+}
+.nav {
+	display:none;
+	text-align: right;
+	margin-bottom:30px;
+	margin-right: 40px;
+}
+#returned-artists {
+	margin-bottom: 20px;
+}
+#returned-info {
+	display:none;
 }

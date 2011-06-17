@@ -12,13 +12,13 @@
 			<div id="header">
 				<% if current_user %>
 					<span class="welcome">Welcome <%= current_user.name %>!
-					<%= link_to "Sign Out", signout_path %></span>
+					<%= link_to "Sign Out", signout_path, :class => "link" %></span>
 					<%else%>
 					<span class="welcome"></span>
 					<% end %>
 					<span>
 					<h1>TrackChat</h1>
-					<h2>What music are the people you follow on Twitter talking about?</h2>
+					<h2>Music recommendations based on idle chatter!</h2>
 			</div>
 			<div class="errors">
 			</div>
