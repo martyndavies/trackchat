@@ -75,8 +75,6 @@ h2 {
 
 li {
 	text-align: left;
-	font-size: 1.5em;
-	font-family: "ff-netto-web-1","ff-netto-web-2";
 	list-style:none;
 }
 
@@ -105,19 +103,31 @@ p a, .explain-text a, li a {
 .artist-list img:hover {
 	border-color: #5DA006;
 }
-.button, .spinner, .errors {
+.button, .spinner {
 	margin-top:200px;
 	width:100%;
 	text-align:center;
 }
 
 .errors {
+	text-align:center;
 	background-color: #4E9B06;
 	color: #fff;
+	margin-bottom: 20px;
+	padding: 10px;
+	font-size: 12px;
 }
 .letsgo, .bigbutton{
 	font-family: "ff-prater-block-web-1","ff-prater-block-web-2";
-    background: -moz-linear-gradient(center top , #4E9B06, #5DA006) repeat scroll 0 0 transparent;
+    background-image: -moz-linear-gradient(center top , #4E9B06, #5DA006) repeat scroll 0 0 transparent;
+	background-image: -webkit-gradient(
+	    linear,
+	    left bottom,
+	    left top,
+	    color-stop(0.03, rgb(9,179,18)),
+	    color-stop(0.52, rgb(29,156,61))
+	);
+	background-color: #4E9B06;
     border: 1px solid #466A98;
     border-radius: 4px 4px 4px 4px;
     color: #FFFFFF;
@@ -133,7 +143,15 @@ p a, .explain-text a, li a {
 }
 .reload, .play {
 	font-family: "ff-prater-block-web-1","ff-prater-block-web-2";
-    background: -moz-linear-gradient(center top , #4E9B06, #5DA006) repeat scroll 0 0 transparent;
+    background-color: -moz-linear-gradient(center top , #4E9B06, #5DA006) repeat scroll 0 0 transparent;
+	background-color: -webkit-gradient(
+	    linear,
+	    left bottom,
+	    left top,
+	    color-stop(0.03, rgb(9,179,18)),
+	    color-stop(0.52, rgb(29,156,61))
+	);
+	background-color: #4E9B06;
     border: 1px solid #466A98;
     border-radius: 4px 4px 4px 4px;
     color: #FFFFFF;
