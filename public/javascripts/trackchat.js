@@ -6,7 +6,7 @@ $(document).ready(function(){
 	var audioTitle;
 	var audioLength;
 	var audioSource;
-	var currentlyPlayingIndex = 0;
+	var currentlyPlayingIndex;
 	
 	$('ul').hide(); // hide any lists
 	$('.spinner').hide();
@@ -73,6 +73,8 @@ $(document).ready(function(){
 							// if the imgurl is just empty then set it to a holding image
 							if (imgurl != null) {
 								imghref = imgurl;
+							} else if (artist.name == "Hey") {
+								imghref = "/images/blank.gif";
 							} else {
 								imghref = "/images/blank.gif";
 							};
@@ -156,7 +158,7 @@ $(document).ready(function(){
 	        url: artisturl,
 	        success: function(echonestAudio) {
 				audioLink = echonestAudio.response.audio[0].url;
-				alert(audioLink);
+				audioTitle = echonestAudio.response.audio[0].title;
 	        },
 			error: function(a, b, c) {
 				$('.errors').append('<li>Sorry, there was an error getting audio for that artist! Details: </li>'+a+b+c).fadeIn("slow").delay(10000).fadeOut('slow', function(){$('.errors li').remove();});
@@ -171,41 +173,65 @@ $(document).ready(function(){
 	soundManager.useFlashBlock = false;
 	
 
+
 	function getandplay() {
+		if (currentlyPlayingIndex == null) {
+			currentlyPlayingIndex = 0;
+		}
 		var thisArtistID = $('body').find('.info').eq(currentlyPlayingIndex).attr('title');
 		getAudio(thisArtistID);
-		function loadAudio(audioLink) {
+		setTimeout(function() {
 			soundManager.onready(function() {
-				console.log(audioLink);
 			  // SM2 has loaded - now you can create and play sounds!
 			  var artistTrack = soundManager.createSound({
 			    id: 'artistTrack-'+currentlyPlayingIndex,
-			    url: 'http://feralpartykids.com/audio/Alice%20And%20The%20Serial%20Numbers-Time%20To%20Freak%20Out%20Feat%20Whiskey%20Pete.mp3',
-				autoPlay:true,
-				autoLoad:true,
-				onload: function() {
-					$('.play').html('Stop');
+			    url: audioLink,
+				onplay: function(){
+					$('.play').html('Playing...');
 					$('body').find('.info').eq(currentlyPlayingIndex).children().css('border-color', 'red');
+					$('.next').fadeIn('slow', function() {
+						$('.back').fadeIn('slow', function() {
+							$('.stop').fadeIn('slow');
+						});
+					});
+					currentlyPlayingIndex++;
+				},
+				onload: function() {
+	
 				},
 				onfinish: function() {
+					$('body').find('.info').eq(currentlyPlayingIndex-1).children().css('border-color', '#4E9B06');
+					getandplay();
+				},
+				ontimeout: function() {
+					$('.errors').append('<li>Damn! Track done timed out!</li>').fadeIn("slow").delay(10000).fadeOut('slow', function(){$('.errors li').remove()});
 					$('body').find('.info').eq(currentlyPlayingIndex).children().css('border-color', '#4E9B06');
-					currentlyPlayingIndex + 1;
-					alert(currentlyPlayingIndex);
+					//currentlyPlayingIndex++;
+					//getandplay();
 				}
 			  });
-			});
-			soundManager.ontimeout(function() {
-				$('.errors').append('<li>Damn! Track done timed out!</li>').fadeIn("slow").delay(10000).fadeOut('slow', function(){$('.errors li').remove();});
-
-			});
-
 			artistTrack.play();
-		}
-		loadAudio(audioLink);
+			});
+		}, 1000);
 		return false;
 	};
 	
 	// on click, run the audio function, then play it, when it's done, move on...
-	$('.play').click(getandplay);
+	$('.play').live('click', getandplay);
+	$('.stop').click(function(){
+		soundManager.stopAll();
+		$('body').find('.info').eq(currentlyPlayingIndex).children().css('border-color', '#4E9B06');
+	});
+	$('.next').click(function() {
+		soundManager.stopAll();
+		$('body').find('.info').eq(currentlyPlayingIndex-1).children().css('border-color', '#4E9B06');
+		getandplay();
+	});
+	$('.back').click(function() {
+		soundManager.stopAll();
+		$('body').find('.info').eq(currentlyPlayingIndex).children().css('border-color', '#4E9B06');
+		currentlyPlayingIndex-1;
+		getandplay();
+	})
 });
 

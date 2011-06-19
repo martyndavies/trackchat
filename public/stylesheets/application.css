@@ -97,6 +97,7 @@ p a, .explain-text a, li a {
 
 .artist-list img {
 	margin-right: 10px;
+	margin-bottom: 10px;
 	border: 8px solid #4E9B06;
 }
 
@@ -141,7 +142,7 @@ p a, .explain-text a, li a {
 .bigbutton a:hover {
 	text-decoration:none;
 }
-.reload, .play {
+.reload, .play, .stop, .next, .back {
 	font-family: "ff-prater-block-web-1","ff-prater-block-web-2";
     background-color: -moz-linear-gradient(center top , #4E9B06, #5DA006) repeat scroll 0 0 transparent;
 	background-color: -webkit-gradient(
@@ -161,6 +162,13 @@ p a, .explain-text a, li a {
     text-decoration: none;
     text-shadow: 0 -1px 0 #003366;
 }
+
+.next, .back, .stop {
+	display:none;
+}
+.stop {
+	background-color: red;
+}
 .nav {
 	display:none;
 	text-align: right;
@@ -172,4 +180,9 @@ p a, .explain-text a, li a {
 }
 #returned-info {
 	display:none;
+}
+
+.nowplaying {
+	display:none;
+	background-color: #4E9B06;
 }
