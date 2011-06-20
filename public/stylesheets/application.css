@@ -4,6 +4,8 @@
 html, body {
 	height: 100%;
 	font-family: arial;
+	background-image:url('/images/bkg.png');
+	background-repeat:repeat;
 }
 
 a.link {
@@ -16,11 +18,19 @@ a.link:hover {
 }
 
 #header {
+	margin: 0 auto;
 	height: 145px;
+	width:100%;
 	background-color: #000;
-	padding-left: 180px;
 	padding-top: 20px;
 	border-bottom: 4px solid grey;
+	text-align: center;
+
+}
+#header-stuff {
+	width: 980px;
+	margin: 0 auto;
+	position: relative;
 }
 
 #header p {
@@ -57,7 +67,6 @@ h2 {
 .welcome {
 	color: #fff;
 	float:right;
-	padding-right:25%;
 	font-size: 12px;
 }
 
@@ -65,13 +74,15 @@ h2 {
 	min-height: 100%;
 	height: auto !important;
 	margin: 0 auto;
+	overflow: hidden;
 	width: 980px;
 	padding-top: 50px;
 	text-align:center;
+	position: relative;
 }
-
-
-
+#container {
+	height: 100%;
+}
 
 li {
 	text-align: left;
@@ -105,7 +116,7 @@ p a, .explain-text a, li a {
 	border-color: #5DA006;
 }
 .button, .spinner {
-	margin-top:200px;
+	margin-top:100px;
 	width:100%;
 	text-align:center;
 }
@@ -186,9 +197,9 @@ p a, .explain-text a, li a {
     border: 1px solid #466A98;
     border-radius: 4px 4px 4px 4px;
     color: #FFFFFF;
-	font-size: 16px;
+	font-size: 12px;
 	float:left;
-	padding: 10px;
+	padding: 14px 10px 11px;
 }
 
 #returned-artists {
@@ -196,4 +207,45 @@ p a, .explain-text a, li a {
 }
 #returned-info {
 	display:none;
+	/*font-family: "ff-prater-block-web-1","ff-prater-block-web-2";*/
+    background-color: -moz-linear-gradient(center top , #4E9B06, #5DA006) repeat scroll 0 0 transparent;
+	background-color: -webkit-gradient(
+	    linear,
+	    left bottom,
+	    left top,
+	    color-stop(0.03, rgb(9,179,18)),
+	    color-stop(0.52, rgb(29,156,61))
+	);
+	background-color: #4E9B06;
+    border: 1px solid #466A98;
+    border-radius: 4px 4px 4px 4px;
+    color: #FFFFFF;
+    font-size: 25px;
+    padding: 12px;
+    text-decoration: none;
+    text-shadow: 0 -1px 0 #003366;
+	text-align: left;
+}
+
+#about {
+	margin-top: 20px;
+	padding-top: 10px;
+	border-top: 1px solid #4E9B06;
+	font-size: 12px;
+	height: 30px;
+	bottom:0;
+	width: 100%;
+	position: absolute;
+}
+
+#about a {
+	color: #4E9B06;
+}
+
+#createdby {
+	float:left;
+}
+
+#logos {
+	float:right;
 }

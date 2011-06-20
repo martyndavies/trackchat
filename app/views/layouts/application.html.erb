@@ -9,8 +9,8 @@
   <%= csrf_meta_tag %>
 </head>
 <body>
-		<div id="main">
 			<div id="header">
+				<div id="header-stuff">
 				<% if current_user %>
 					<span class="welcome">Welcome <%= current_user.name %>!
 					<%= link_to "Sign Out", signout_path, :class => "link" %></span>
@@ -20,6 +20,7 @@
 					<span>
 					<h1>TrackChat</h1>
 					<h2>Music recommendations based on idle chatter!</h2>
+				</div>
 			</div>
 
 			<div id="container">
@@ -32,8 +33,20 @@
 				<% else %>
 					<%= yield %>
 				<% end %>
+				<div id="about">
+					<div id="createdby">Created by <a href="http://www.twitter.com/martynrdavies">@martynrdavies</a> | &copy; <a href="http://www.sixtwoproductions.co.uk">Six Two Productions</a></div>
+					<div id="logos">Built with <a href="http://the.echonest.com">Echonest</a>, <a href="http://www.twitter.com">Twitter</a>, Ruby on Rails and jQuery</div>
+				</div>
 			</div>
-		</div>
+
+		<script type="text/javascript">
+		  (function() {
+		    var uv = document.createElement('script'); uv.type = 'text/javascript'; uv.async = true;
+		    uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/wsBXyFDsgNXSIdtG2plhg.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(uv, s);
+		  })();
+		</script>
+		
 		<script type="text/javascript">
 
 		  var _gaq = _gaq || [];

@@ -51,7 +51,7 @@ $(document).ready(function(){
 							$.ajax({
 						        type: "HEAD",
 						        url: imgurl,
-								crossDomain: false,
+								crossDomain: true,
 								statusCode: {
 									301: function() {
 										imghref = "/images/blank.gif";
@@ -61,10 +61,26 @@ $(document).ready(function(){
 									},
 									501: function() {
 										imghref = "/images/blank.gif";
+									},
+									404: function() {
+										imghref = "/images/blank.gif";
 									}
 								},
 						        success: function() {
-						        	imghref = imgurl;
+									function testImage(imgurl) {
+										var tester = new Image();
+										tester.onLoad = isGood;
+										tester.onError = swapOut;
+										tester.src=imgurl;
+									};
+
+									function swapOut() {
+										imghref = "/images/blank.gif";
+									};
+									
+									function isGood() {
+						        		imghref = imgurl;
+									};
 						        },
 								error: function() {
 									imghref = "/images/blank.gif";
@@ -72,12 +88,10 @@ $(document).ready(function(){
 						    });
 							
 							// if the imgurl is just empty then set it to a holding image
-							if (imgurl != null) {
-								imghref = imgurl;
-							} else if (artist.name == "Hey") {
+							if (imgurl == null) {
 								imghref = "/images/blank.gif";
 							} else {
-								imghref = "/images/blank.gif";
+								imghref = imgurl;
 							};
 							
 							// Append the image information and links to the <ul>
@@ -102,10 +116,8 @@ $(document).ready(function(){
 	return false;
 	};
 	
-	// Go and get the artist information on click!
-	$('.info').live('click',function() {
+	function getInfo(artistid) {
 		$('#returned-info:visible').fadeOut('slow');
-		var artistid = $(this).attr('title');
 		var artisturl = 'http://developer.echonest.com/api/v4/artist/profile?api_key='+api_key+'&id='+artistid+'&bucket=id:7digital&bucket=urls&bucket=years_active&bucket=id:musicbrainz&format=jsonp&callback=?';
 		
 		$.ajax({
@@ -117,20 +129,49 @@ $(document).ready(function(){
 	        success: function(echonest) {
 				var artistUrls = [];
 				var artistName = echonest.response.artist.name;
+				var artistActiveStart = echonest.response.artist.years_active[0].start;
 				$.each(echonest.response.artist.urls, function(service, url) {
-					$('.listoflinks').append('<li><a href=\"'+url+'\">'+url+'</a></li>');
+					$('#returned-info .infobox .listoflinks').append('<li><a href=\"'+url+'\">'+url+'</a></li>');
 				});
-				$('#returned-info .name .titlespan').after(artistName);
+				
+				getSpotify(artistName);
+				
+				$('#returned-info .artistname').html(artistName);
+
+				if (artistActiveStart == undefined){
+					$('#returned-info .years_active').html('We\'re not too sure, but it\'s probably back in the day!');
+				} else {
+					$('#returned-info .years_active').html(artistActiveStart);
+				};
+				
 				$('#returned-info').fadeIn('slow');
 	        },
 			error: function() {
-				$('.errors').after('<li>Sorry, there was an error getting information for that artist!</li>').fadeIn("slow").delay(10000).fadeOut('slow', function(){$('.errors li').remove();});
+				$('.errors').after('<li>Sorry, there was an error getting information on that artist!</li>').fadeIn("slow").delay(10000).fadeOut('slow', function(){$('.errors li').remove();});
 			} 
 	    });
 
+		$('body').find('.info title', artistid).children().css('border-color', 'red');
+	};
+	
+	// Go and get the artist information on click!
+	$('.info').live('click', function(){
+		var id_for_info = $(this).attr('title');
+		getInfo(id_for_info);
 		$(this).children().css('border-color', 'red');
 		return false;
 	});
+	
+	
+	function getSpotify(artistName) {
+		$.getJSON('http://ws.spotify.com/search/1/artist.json?q='+artistName, function(data) {
+			var spotifyURL = data.artists[0].href;
+			$('#returned-info .spotifylink').html('<a href=\"'+spotifyURL+'\">'+spotifyURL+'</a>');
+		}).error(function() {
+			$('#returned-info .spotifylink').html('Sorry, we couldn\'t get a Spotify link for '+artistName);
+		});
+
+	};
 	
 	// first big button
 	$(".letsgo").click(letsGo);
@@ -161,7 +202,7 @@ $(document).ready(function(){
 	        url: artisturl,
 	        success: function(echonestAudio) {
 				if (echonestAudio.response.audio[0] == undefined) {
-					$('body').find('.title', artistid).children().css('border-color', '#4E9B06');
+					$('body').find('title', artistid).children().css('border-color', '#4E9B06');
 					skip();
 				} else {
 					audioLink = echonestAudio.response.audio[0].url;
@@ -177,7 +218,7 @@ $(document).ready(function(){
 					crossDomain: false,
 					statusCode: {
 						404: function() {
-							$('body').find('.title', artistid).children().css('border-color', '#4E9B06');
+							$('body').find('.info').attr('title', artistid).children().css('border-color', '#4E9B06');
 							skip();	
 						}
 					},
@@ -200,7 +241,7 @@ $(document).ready(function(){
 	soundManager.url = '/swf/'; // directory where SM2 .SWFs live
 	soundManager.useHTML5Audio = true;
 	soundManager.useFlashBlock = false;
-	//soundManager.debugMode = false;
+	soundManager.debugMode = false;
 	
 
 
@@ -226,8 +267,10 @@ $(document).ready(function(){
 							};
 						});
 					});
-					currentlyPlayingIndex++;
 					$('.nowplaying').html('Now playing: \''+audioTitle+'\'&nbsp;by&nbsp'+audioArtist).fadeIn("slow");
+					getInfo(thisArtistID);
+					currentlyPlayingIndex++;
+					
 				},
 				onload: function() {
 	
@@ -274,14 +317,14 @@ $(document).ready(function(){
 	});
 	$('.next').click(function() {
 		soundManager.stopAll();
-		soundManager.destroySound('artistTrack'+currentlyPlayingIndex);
+		//soundManager.destroySound('artistTrack'+currentlyPlayingIndex);
 		$('body').find('.info').eq(currentlyPlayingIndex-1).children().css('border-color', '#4E9B06');
 		getandplay();
 		return false;
 	});
 	$('.back').click(function() {
 		soundManager.stopAll();
-		soundManager.destroySound('artistTrack'+currentlyPlayingIndex);
+		//soundManager.destroySound('artistTrack'+currentlyPlayingIndex);
 		$('body').find('.info').eq(currentlyPlayingIndex-1).children().css('border-color', '#4E9B06');
 		currentlyPlayingIndex = currentlyPlayingIndex - 2;
 		//alert(currentlyPlayingIndex);
