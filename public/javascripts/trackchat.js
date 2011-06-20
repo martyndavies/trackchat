@@ -200,7 +200,7 @@ $(document).ready(function(){
 	soundManager.url = '/swf/'; // directory where SM2 .SWFs live
 	soundManager.useHTML5Audio = true;
 	soundManager.useFlashBlock = false;
-	soundManager.debugMode = false;
+	//soundManager.debugMode = false;
 	
 
 
