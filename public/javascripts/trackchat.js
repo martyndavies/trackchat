@@ -247,7 +247,7 @@ $(document).ready(function(){
 	//soundManager.useFastPolling = true;
 	//soundManager.useHighPerformance = true;
 	soundManager.defaultOptions.volume = 33;
-	soundManager.debugMode = false;
+	//soundManager.debugMode = false;
 	
 
 
