@@ -7,7 +7,10 @@ $(document).ready(function(){
 	var audioTitle;
 	var audioLength;
 	var audioSource;
+	var previousPlayingIndex;
 	var currentlyPlayingIndex;
+	var nextPlayingIndex;
+	var playIndex;
 	
 	$('ul').hide(); // hide any lists
 	$('.spinner').hide();
@@ -88,7 +91,7 @@ $(document).ready(function(){
 						    });
 							
 							// if the imgurl is just empty then set it to a holding image
-							if (imgurl == null) {
+							if (!imgurl) {
 								imghref = "/images/blank.gif";
 							} else {
 								imghref = imgurl;
@@ -241,73 +244,94 @@ $(document).ready(function(){
 	soundManager.url = '/swf/'; // directory where SM2 .SWFs live
 	soundManager.useHTML5Audio = true;
 	soundManager.useFlashBlock = false;
+	//soundManager.useFastPolling = true;
+	//soundManager.useHighPerformance = true;
+	soundManager.defaultOptions.volume = 33;
 	soundManager.debugMode = false;
 	
 
 
-	function getandplay() {
-		if (currentlyPlayingIndex == null) {
-			currentlyPlayingIndex = 0;
-		}
-		var thisArtistID = $('body').find('.info').eq(currentlyPlayingIndex).attr('title');
+	function getandplay(playIndex) {
+		if (!playIndex || playIndex == null || playIndex == undefined) {
+			playIndex = 0;
+		};
+		var thisArtistID = $('body').find('.info').eq(playIndex).attr('title');
+		//alert(thisArtistID);
 		getAudio(thisArtistID);
+		//alert(playIndex);
 		setTimeout(function() {
 			soundManager.onready(function() {
+				//if (soundManager.canPlayURL(audioLink)) {
 			  // SM2 has loaded - now you can create and play sounds!
-			  var artistTrack = soundManager.createSound({
-			    id: 'artistTrack-'+currentlyPlayingIndex,
-			    url: audioLink,
-				onplay: function(){
-					$('.play').html('Playing...');
-					$('body').find('.info').eq(currentlyPlayingIndex).children().css('border-color', 'red');
-					$('.next').fadeIn('slow', function() {
-						$('.stop').fadeIn('slow', function() {
-							if (currentlyPlayingIndex != 0) {
+					var artistTrack = soundManager.createSound({
+			    		id: 'artistTrack-'+playIndex,
+			    		url: audioLink,
+						onplay: function(){
+							$('.play').html('Playing...');
+							$('body').find('.info').eq(playIndex).children().css('border-color', 'red');
+							$('.next').fadeIn('slow', function() {
+								$('.stop').fadeIn('slow');
+							});
+							if (playIndex > 0) {
 								$('.back').fadeIn('slow');
 							};
-						});
-					});
-					$('.nowplaying').html('Now playing: \''+audioTitle+'\'&nbsp;by&nbsp'+audioArtist).fadeIn("slow");
-					getInfo(thisArtistID);
-					currentlyPlayingIndex++;
+							$('.nowplaying').html('Now playing: \''+audioTitle+'\'&nbsp;by&nbsp'+audioArtist).fadeIn("slow");
+							
+							getInfo(thisArtistID);
+							previousPlayingIndex = playIndex;
+							if (!previousPlayingIndex || previousPlayingIndex < 0) {
+								previousPlayingIndex+1;
+							} else {
+							 	previousPlayingIndex = playIndex-1;
+							};
+							nextPlayingIndex = playIndex+1;
+							//alert('PreviousIndex: '+previousPlayingIndex+' NextIndex: '+nextPlayingIndex+' CurrentIndex: '+playIndex);
 					
-				},
-				onload: function() {
-	
-				},
-				onfinish: function() {
-					$('body').find('.info').eq(currentlyPlayingIndex-1).children().css('border-color', '#4E9B06');
-					getandplay();
-				},
-				ontimeout: function() {
-					$('.errors').append('<li>Damn! Track done timed out!</li>').fadeIn("slow").delay(10000).fadeOut('slow', function(){$('.errors li').remove()});
-					$('body').find('.info').eq(currentlyPlayingIndex).children().css('border-color', '#4E9B06');
-					currentlyPlayingIndex++;
-					getandplay();
-				},
-				onerror: function() {
-					$('body').find('.info').eq(currentlyPlayingIndex).children().css('border-color', '#4E9B06');
-					currentlyPlayingIndex++;
-					getandplay();
-				}
-			  });
-			artistTrack.play();
-			});
-		}, 1000);
+						},
+						onload: function() {
+						},
+						onfinish: function() {
+							$('body').find('.info').eq(previousPlayingIndex).children().css('border-color', '#4E9B06');
+							getandplay(nextPlayingIndex);
+						},
+						ontimeout: function() {
+							$('.errors').append('<li>Damn! Track done timed out!</li>').fadeIn("slow").delay(10000).fadeOut('slow', function(){$('.errors li').remove()});
+							$('body').find('.info').eq(playIndex).children().css('border-color', '#4E9B06');
+							playIndex +1;
+							getandplay(nextPlayingIndex);
+						},
+						onerror: function() {
+							$('body').find('.info').eq(playIndex).children().css('border-color', '#4E9B06');
+							playIndex+1;
+							getandplay(nextPlayingIndex);
+						}
+			  		});
+					artistTrack.play();
+			
+		//	} else {
+		//		$('body').find('.info').eq(currentlyPlayingIndex).children().css('border-color', '#4E9B06');
+		//		currentlyPlayingIndex++;
+		//		getandplay();
+		//	};
+			})
+		}, 2000);
 		return false;
 	};
 	
 	function skip() {
 		soundManager.stopAll();
-		currentlyPlayingIndex = currentlyPlayingIndex + 1;
-		getandplay();
+		getandplay(nextPlayingIndex);
 	}
 	
 	// on click, run the audio function, then play it, when it's done, move on...
-	$('.play').live('click', getandplay);
+	$('.play').live('click', function() {
+		getandplay(playIndex);
+	});
+	
+	// stop that fucker
 	$('.stop').click(function(){
 		soundManager.stopAll();
-		soundManager.destroySound('artistTrack'+currentlyPlayingIndex);
+		//soundManager.destroySound('artistTrack-'+previousPlayingIndex);
 		$('body').find('.info').children().css('border-color', '#4E9B06');
 		$('.nowplaying').fadeOut('slow');
 		$('.next, .back').fadeOut('slow');
@@ -315,21 +339,29 @@ $(document).ready(function(){
 		currentlyPlayingIndex = 0;
 		return false;
 	});
+	
+	// next please
 	$('.next').click(function() {
 		soundManager.stopAll();
-		//soundManager.destroySound('artistTrack'+currentlyPlayingIndex);
-		$('body').find('.info').eq(currentlyPlayingIndex-1).children().css('border-color', '#4E9B06');
-		getandplay();
+		soundManager.unload('artistTrack-'+previousPlayingIndex);
+		//soundManager.stop('artistTrack-'+previousPlayingIndex);
+		//soundManager.destroySound('artistTrack'+previousPlayingIndex);
+		$('body').find('.info').eq(previousPlayingIndex).children().css('border-color', '#4E9B06');
+		getandplay(nextPlayingIndex);
 		return false;
 	});
+	
+	// that was good, again please
 	$('.back').click(function() {
-		soundManager.stopAll();
-		//soundManager.destroySound('artistTrack'+currentlyPlayingIndex);
-		$('body').find('.info').eq(currentlyPlayingIndex-1).children().css('border-color', '#4E9B06');
-		currentlyPlayingIndex = currentlyPlayingIndex - 2;
+		soundManager.unload('artistTrack-'+previousPlayingIndex);
+		//soundManager.destroySound('artistTrack-'+currentlyPlayingIndex);
+		$('body').find('.info').eq(previousPlayingIndex).children().css('border-color', '#4E9B06');
+		//playIndex = playIndex - 2;
 		//alert(currentlyPlayingIndex);
-		getandplay();
+		getandplay(previousPlayingIndex);
 		return false;
 	});
+	
+// it's over, move on!	
 });
 

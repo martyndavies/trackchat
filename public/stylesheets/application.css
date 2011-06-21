@@ -204,6 +204,7 @@ p a, .explain-text a, li a {
 
 #returned-artists {
 	margin-bottom: 20px;
+	text-align: center;
 }
 #returned-info {
 	display:none;
