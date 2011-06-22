@@ -1,4 +1,8 @@
 Trackchat::Application.routes.draw do
+  resources :tracks
+
+  resources :playlists
+
   root :to => "home#index"
 
   match "/auth/:provider/callback" => "sessions#create"

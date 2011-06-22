@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  artist: MyString
+  title: MyString
+  belongs_to_playlist: 1
+  artist_echonest_id: MyString
+  track_echonest_id: MyString
+
+two:
+  artist: MyString
+  title: MyString
+  belongs_to_playlist: 1
+  artist_echonest_id: MyString
+  track_echonest_id: MyString

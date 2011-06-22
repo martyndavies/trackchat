@@ -1,25 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>TrackChat</title>
+  <title>TrackChattr</title>
   <%= stylesheet_link_tag :all %>
-  <%= javascript_include_tag :defaults, "trackchat", "soundmanager2" %>
 	<script type="text/javascript" src="http://use.typekit.com/npg1zce.js"></script>
 	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+  <%= javascript_include_tag :defaults, "trackchat", "soundmanager2" %>
+
   <%= csrf_meta_tag %>
 </head>
 <body>
 			<div id="header">
 				<div id="header-stuff">
-				<% if current_user %>
-					<span class="welcome">Welcome <%= current_user.name %>!
-					<%= link_to "Sign Out", signout_path, :class => "link" %></span>
-					<%else%>
-					<span class="welcome"></span>
-					<% end %>
-					<span>
-					<h1>TrackChat</h1>
-					<h2>Music recommendations based on idle chatter!</h2>
+					<div id="welcome-container">
+						<div id="login">
+							<% if current_user %>
+								<span class="welcome">Welcome <%= current_user.name %>!
+								<%= link_to "Sign Out", signout_path, :class => "link" %></span>
+							<%else%>
+								<span class="welcome"></span>
+							<% end %>
+						</div>
+					</div>
+					<div id="logo">
+						<h1>TrackChattr</h1>
+						<h2>Music recommendations based on idle chatter!</h2>
+					</div>
 				</div>
 			</div>
 
@@ -33,10 +39,12 @@
 				<% else %>
 					<%= yield %>
 				<% end %>
-				<div id="about">
-					<div id="createdby">Created by <a href="http://www.twitter.com/martynrdavies">@martynrdavies</a> | &copy; <a href="http://www.sixtwoproductions.co.uk">Six Two Productions</a></div>
-					<div id="logos">Built with <a href="http://the.echonest.com">Echonest</a>, <a href="http://www.twitter.com">Twitter</a>, Ruby on Rails and jQuery</div>
-				</div>
+
+			</div>
+			<div id="about">
+				<div id="createdby">Created by <a href="http://www.twitter.com/martynrdavies">@martynrdavies</a> | &copy; <a href="http://www.sixtwoproductions.co.uk">Six Two Productions</a>, Built with <a href="http://the.echonest.com">Echonest</a>, <a href="http://www.twitter.com">Twitter</a>, Ruby on Rails and jQuery</div>
+				
+				<div id="logos"><div id="facebook"><div id="fb-root"></div><script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script><fb:like href="http://trackchat.heroku.com" send="true" width="450" show_faces="false" font="segoe ui"></fb:like></div></div>
 			</div>
 
 		<script type="text/javascript">

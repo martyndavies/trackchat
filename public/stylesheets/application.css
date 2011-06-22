@@ -33,20 +33,25 @@ a.link:hover {
 	position: relative;
 }
 
-#header p {
-	float: right;
-	margin-right: 280px;
-    margin-top: -45px;
+#logo {
+	float:left;
 }
+
+#welcome-container {
+	float:right;
+}
+
 
 h1, h2 {
 	text-align: left;
+	position:relative;
 }
 
 h1 {
 	font-size: 5em;
 	color: #4E9B06;
 	font-family: "ff-prater-block-web-1","ff-prater-block-web-2";
+
 }
 h1 a {
 	text-decoration:none;
@@ -55,10 +60,11 @@ h1 a {
 
 h2 {
 	font-family: "atrament-web-1","atrament-web-2";
-	font-style: italic;
-	color: #fff;
-	margin-left: 10px;
-    margin-top: -12px;
+    font-size: 1.5em;
+    font-style: italic;
+    margin-left: 10px;
+	margin-top: -12px;
+	color:#fff;
 }
 
 .strong {
@@ -80,19 +86,10 @@ h2 {
 	text-align:center;
 	position: relative;
 }
-#container {
-	height: 100%;
-}
 
 li {
 	text-align: left;
 	list-style:none;
-}
-
-p a, .explain-text a, li a {
-	color: green;
-	text-decoration:none;
-	font-style:bold;
 }
 
 .artist-list {
@@ -228,6 +225,44 @@ p a, .explain-text a, li a {
 	text-align: left;
 }
 
+.infobox {
+	/*font-family: "ff-prater-block-web-1","ff-prater-block-web-2";*/
+	background-color: #488214;
+    border-radius: 4px 4px 4px 4px;
+    color: #FFFFFF;
+    font-size: 20px;
+    padding: 12px;
+    text-decoration: none;
+    text-shadow: 0 -1px 0 #003366;
+	text-align: left;
+	margin-bottom:10px;
+}
+
+#first-three {
+	float:left;
+	width:49%;
+}
+
+#second-three {
+	float:right;
+	width: 49%;
+}
+
+#final {
+	clear:both;
+}
+
+.listoflinks a {
+	color: #fff;
+	text-decoration:none;
+	font-size:18px;
+}
+.listoflinks a:hover {
+	color: #fff;
+	text-decoration:underline;
+	font-size:18px;
+}
+
 #about {
 	margin-top: 20px;
 	padding-top: 10px;
@@ -236,7 +271,6 @@ p a, .explain-text a, li a {
 	height: 30px;
 	bottom:0;
 	width: 100%;
-	position: absolute;
 }
 
 #about a {

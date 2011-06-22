@@ -11,6 +11,8 @@ $(document).ready(function(){
 	var currentlyPlayingIndex;
 	var nextPlayingIndex;
 	var playIndex;
+	var facebookLink;
+	var genre;
 	
 	$('ul').hide(); // hide any lists
 	$('.spinner').hide();
@@ -121,7 +123,8 @@ $(document).ready(function(){
 	
 	function getInfo(artistid) {
 		$('#returned-info:visible').fadeOut('slow');
-		var artisturl = 'http://developer.echonest.com/api/v4/artist/profile?api_key='+api_key+'&id='+artistid+'&bucket=id:7digital&bucket=urls&bucket=years_active&bucket=id:musicbrainz&format=jsonp&callback=?';
+		$('.listoflinks li').remove();
+		var artisturl = 'http://developer.echonest.com/api/v4/artist/profile?api_key='+api_key+'&id='+artistid+'&bucket=id:facebook&bucket=id:7digital&bucket=urls&bucket=years_active&bucket=id:musicbrainz&format=jsonp&callback=?';
 		
 		$.ajax({
 			cache: true,
@@ -134,20 +137,71 @@ $(document).ready(function(){
 				var artistName = echonest.response.artist.name;
 				var artistActiveStart = echonest.response.artist.years_active[0].start;
 				$.each(echonest.response.artist.urls, function(service, url) {
-					$('#returned-info .infobox .listoflinks').append('<li><a href=\"'+url+'\">'+url+'</a></li>');
+					$('.listoflinks').append('<li><a title=\"'+service+'\" href=\"'+url+'\">'+url+'</a></li>');
+					
 				});
 				
-				getSpotify(artistName);
-				
-				$('#returned-info .artistname').html(artistName);
 
+				// Link stuff
+				if (!echonest.response.artist.foreign_ids['0']['foreign_id'] || echonest.response.artist.foreign_ids['0']['foreign_id'] == null || echonest.response.artist.foreign_ids['0']['foreign_id'] == undefined) {
+					var facebookLink = "Not available"
+				} else {
+					var artistFacebook = echonest.response.artist.foreign_ids['0']['foreign_id'];
+					var fb_id = artistFacebook.split(":", 3);
+					$.ajax({
+						type: 'GET',
+						dataType: 'jsonp',
+						jsonpCallback: 'facebook',
+				        url: 'https://graph.facebook.com/'+fb_id[2],
+						crossDomain: true,
+				        success: function(facebook){
+							if (facebook['category'] == "Musician/band") {
+								facebookLink = facebook['link'];
+								genre = facebook['genre'];
+								console.log(facebookLink+genre);
+								$('#returned-info .facebook').html(facebookLink);
+								$('#returned-info .genre').html(genre);
+							} else {
+								$('#returned-info .facebook').html('Not available');
+								$('#returned-info .genre').html('Genreless!');
+							};
+				        },
+						error: function() {
+							$('#returned-info .facebook').html('Not available');
+							$('#returned-info .genre').html('Genreless!');
+						} 
+				    });
+				};
+				
+				if (!echonest.response.artist.foreign_ids['1']['foreign_id'] || echonest.response.artist.foreign_ids['1']['foreign_id'] == null || echonest.response.artist.foreign_ids['1']['foreign_id'] == undefined) {
+					var artist7digital = "Not available"
+				} else {
+					var artist7digital = echonest.response.artist.foreign_ids['1']['foreign_id'];
+				};
+				
+				if (!echonest.response.artist.foreign_ids['2']['foreign_id'] || echonest.response.artist.foreign_ids['2']['foreign_id'] == null || echonest.response.artist.foreign_ids['2']['foreign_id'] == undefined) {
+					var artistMusicbrainz = "Not available"
+				} else {
+					var artistMusicbrainz = echonest.response.artist.foreign_ids['2']['foreign_id'];
+				};
+				
+				getSpotify(artistName);
+
+				$('#returned-info .artistname').html(artistName);
+				$('#returned-info .7digital').html(artist7digital);
+				
+				
+				// Years active stuff
 				if (artistActiveStart == undefined){
 					$('#returned-info .years_active').html('We\'re not too sure, but it\'s probably back in the day!');
 				} else {
 					$('#returned-info .years_active').html(artistActiveStart);
 				};
 				
-				$('#returned-info').fadeIn('slow');
+				// Fade it all in
+				$('#returned-info').fadeIn('slow', function(){
+					$('.listoflinks').fadeIn('fast');
+				});
 	        },
 			error: function() {
 				$('.errors').after('<li>Sorry, there was an error getting information on that artist!</li>').fadeIn("slow").delay(10000).fadeOut('slow', function(){$('.errors li').remove();});
@@ -155,6 +209,25 @@ $(document).ready(function(){
 	    });
 
 		$('body').find('.info title', artistid).children().css('border-color', 'red');
+	};
+	
+	
+	function getSpotify(artistName) {
+		var artistSearch = encodeURIComponent(artistName);
+		var searchURL = 'http://ws.spotify.com/search/1/artist.json?q='+artistSearch;
+		$.ajax({
+			type: 'GET',
+			dataType: 'json',
+	        url: searchURL,
+			crossDomain: true,
+	        success: function(spotify){
+				var spotifyURL = spotify.artists[0]['href'];
+				$('#returned-info .spotifylink').html('<a href=\"'+spotifyURL+'\">'+spotifyURL+'</a>');
+	        },
+			error: function() {
+				$('#returned-info .spotifylink').html('Not available');
+			} 
+	    });
 	};
 	
 	// Go and get the artist information on click!
@@ -166,15 +239,7 @@ $(document).ready(function(){
 	});
 	
 	
-	function getSpotify(artistName) {
-		$.getJSON('http://ws.spotify.com/search/1/artist.json?q='+artistName, function(data) {
-			var spotifyURL = data.artists[0].href;
-			$('#returned-info .spotifylink').html('<a href=\"'+spotifyURL+'\">'+spotifyURL+'</a>');
-		}).error(function() {
-			$('#returned-info .spotifylink').html('Sorry, we couldn\'t get a Spotify link for '+artistName);
-		});
 
-	};
 	
 	// first big button
 	$(".letsgo").click(letsGo);
@@ -247,7 +312,7 @@ $(document).ready(function(){
 	//soundManager.useFastPolling = true;
 	//soundManager.useHighPerformance = true;
 	soundManager.defaultOptions.volume = 33;
-	//soundManager.debugMode = false;
+	soundManager.debugMode = false;
 	
 
 
@@ -269,15 +334,19 @@ $(document).ready(function(){
 						onplay: function(){
 							$('.play').html('Playing...');
 							$('body').find('.info').eq(playIndex).children().css('border-color', 'red');
-							$('.next').fadeIn('slow', function() {
-								$('.stop').fadeIn('slow');
-							});
+							
+							if (playIndex < 1) {
+								$('.next').fadeIn('slow', function() {
+									$('.stop').fadeIn('slow');
+								});
+							};
+							
 							if (playIndex > 0) {
 								$('.back').fadeIn('slow');
 							};
 							$('.nowplaying').html('Now playing: \''+audioTitle+'\'&nbsp;by&nbsp'+audioArtist).fadeIn("slow");
-							
 							getInfo(thisArtistID);
+							
 							previousPlayingIndex = playIndex;
 							if (!previousPlayingIndex || previousPlayingIndex < 0) {
 								previousPlayingIndex+1;
@@ -291,7 +360,7 @@ $(document).ready(function(){
 						onload: function() {
 						},
 						onfinish: function() {
-							$('body').find('.info').eq(previousPlayingIndex).children().css('border-color', '#4E9B06');
+							$('body').find('.info').eq(playIndex).children().css('border-color', '#4E9B06');
 							getandplay(nextPlayingIndex);
 						},
 						ontimeout: function() {
@@ -326,6 +395,7 @@ $(document).ready(function(){
 	// on click, run the audio function, then play it, when it's done, move on...
 	$('.play').live('click', function() {
 		getandplay(playIndex);
+		return false;
 	});
 	
 	// stop that fucker
