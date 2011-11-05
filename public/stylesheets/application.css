@@ -264,6 +264,8 @@ li {
 }
 
 #about {
+	background-color: #000;
+	color: #ccc;
 	margin-top: 20px;
 	padding-top: 10px;
 	border-top: 1px solid #4E9B06;
